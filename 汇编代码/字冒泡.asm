@@ -1,0 +1,41 @@
+DATA SEGMENT 
+A DW 6221H,1356H,4523H,5378H,0348H
+N EQU 5
+DATA ENDS
+
+
+CODE SEGMENT 
+   START:   
+      MOV AX, DATA
+      MOV DS, AX
+      MOV DL,08H
+      PUSH DX
+      
+      MOV CX,N
+BLP:      MOV SI,0
+LP:   LEA BX,A
+      MOV AX,[BX+SI]
+      MOV DX,[BX+SI+2]
+      CMP AX,DX
+      JA OVER
+      XCHG AX,DX
+      MOV [BX+SI],AX
+      MOV [BX+SI+2],DX    
+OVER:
+ADD SI,02H
+MOV AX,CX
+DEC AX
+MOV BL,02H
+MUL BL 
+CMP SI,AX
+JZ SEC
+JMP LP
+
+SEC:
+DEC CX
+CMP CX,01H
+JNZ BLP
+MOV AH,4CH
+INT 21H
+CODE    ENDS
+END    START    ; set entry point.
